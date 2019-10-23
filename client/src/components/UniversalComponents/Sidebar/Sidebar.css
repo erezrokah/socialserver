@@ -1,0 +1,33 @@
+		a:hover{
+			text-decoration: none;
+		}
+		.menu ul li{
+			list-style: none;
+			padding: 10px;
+			cursor: pointer;
+			transition: 0.2s;
+			border-radius: 10px;
+			border-top: 1px solid #dee2e6;
+			font-size: 14px;
+		}
+		.menu ul li a{
+			color: black;
+			transition: 0.2s;
+		}
+		.menu ul li:nth-child(odd){
+			background-color: rgba(0,0,0,.05);
+		}
+		.badge{
+			margin-top: 2px;
+			padding-bottom:4px;
+			float: right;
+		}
+		img{
+			border-radius: 50%;
+		}
+		#menu .active{
+			color:#007bff;
+		}
+		p{
+			font-size: 14px;
+		}

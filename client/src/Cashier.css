@@ -1,0 +1,32 @@
+#search-form .form-control{
+	box-shadow: 0 0 0;
+}
+body #serialNumber{
+	font-size: 14px;
+	padding-left: 40px;
+}	
+/* .table tr:nth-child(even){
+	background-color: rgba(0,0,0,.05);
+} */
+.table .quantity{
+	width:50px;
+	box-shadow: 0 0 0;
+	font-size: 14px;
+	padding:0 6px;
+}
+#icon{
+	position: absolute;
+	top:50%;
+	left:0;
+	transform: translateY(-50%);
+}
+
+#selectbar{
+	/*height: 40px;*/
+	font-size: 14px;
+	/*width:70px;*/
+	box-shadow: 0 0 0;
+	box-sizing: border-box;
+	padding:0;
+	/*padding-right: 12px;*/
+}
