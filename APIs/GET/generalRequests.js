@@ -1,16 +1,13 @@
 const router = require('express').Router()
-const fs = require('fs')
+const dirTree = require('directory-tree')
+const db = require('../../config/dbconfig')
 
-router.get('/profilePic',(req,res)=>{
-	var uname = req.session.usernamePatient || req.session.usernameDoctor
-	|| req.session.usernamePharmacist || req.session.usernameLab
-	if(req.session.profileStatus){
-		var file = fs.createReadStream(`public/profileimage/${uname}.png`)
-		file.pipe(res)
+router.get('/checkAuth',(req,res)=>{
+	if(req.session.loggedIn==true){
+		res.send({auth:true})
 	}
 	else{
-		var file = fs.createReadStream(`public/profileimage/default.png`)
-		file.pipe(res)
+		res.send({auth:false})
 	}
 })
 

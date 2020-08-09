@@ -1,9 +1,0 @@
-.select,.input{
-	border-color:white;
-	border-bottom-color:lightgray;
-}
-
-.select:focus,.input:focus{
-	border-color:white;
-	border-bottom-color: #007bff; 
-}

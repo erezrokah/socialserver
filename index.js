@@ -5,9 +5,11 @@ const session = require('express-session')
 const flash = require('connect-flash')
 const path = require('path')
 const jwt = require('jsonwebtoken')
+const userQueries = require('./queries/userQueries')
+var faker = require('faker')
 
 //Configuring App wide variables
-app.set('port',process.env.PORT || 5000)
+app.set('port',process.env.PORT || 7000)
 
 //Setting Up Middlewares
 
@@ -21,7 +23,7 @@ app.use(session({
 	resave:false,
 	saveUninitialized:false,
 	cookie:{
-		maxAge:1000*60*60
+		maxAge:1000*60*60*12
 	}
 }));
 
@@ -32,7 +34,7 @@ app.use(cors({
 }))
 
 app.use((req,res,next)=>{
-	// console.log(req.session)
+	console.log(req.session)
 	next()
 })
 
@@ -40,7 +42,7 @@ app.use((req,res,next)=>{
 app.use(flash())
 
 //JWT Middleware
-app.use('/apiGET',(req,res,next)=>{
+/*app.use('/apiGET',(req,res,next)=>{
 	const bearerHeader = req.headers['authorization']
 	if(typeof bearerHeader!=='undefined')
 	{
@@ -56,7 +58,7 @@ app.use('/apiGET',(req,res,next)=>{
 		res.sendStatus(403)
 	}
 })
-
+*/
 //Static Middleware
 app.use(express.static(path.join(__dirname,'public')))
 
@@ -72,28 +74,29 @@ if (app.get('env') === 'development') {
 }
 
 //GET API endpoints
-app.use('/apiGET',require('./APIs/GET/patientRequests'))
-app.use('/apiGET',require('./APIs/GET/doctorRequests'))
-app.use('/apiGET',require('./APIs/GET/pharmacistRequests'))
-app.use('/apiGET',require('./APIs/GET/labRequests'))
-app.use('/apiGET',require('./APIs/GET/generalRequests'))
-app.use('/apiAuth',require('./APIs/GET/authCheckRequests'))
+app.use('/',require('./APIs/GET/generalRequests'))
+app.use('/',require('./APIs/GET/userRequests'))
 
 //POST API endpoints
-app.use('/apiPOST',require('./APIs/POST/generalRequests'))
-app.use('/apiPOST',require('./APIs/POST/patientRequests'))
-app.use('/apiPOST',require('./APIs/POST/doctorRequests'))
+app.use('/',require('./APIs/POST/authRequests'))
+app.use('/',require('./APIs/POST/userRequests'))
 
 //Serve React app in production
-if(process.env.NODE_ENV==='production'){
+
+/*if(process.env.NODE_ENV==='production'){
 	app.use(express.static('client/build'))
 
 	app.get('*',(req,res)=>{
 		res.sendFile(path.resolve(__dirname,'client','build','index.html'))
 	})
-}
+}*/
+
 
 app.listen(app.get('port'), () => {
-	console.log('servers running on 5000')
+	console.log('servers running on 7000')
 })
 
+/*for(let i=0;i<3;i++){
+	userQueries.addPost('usman',faker.lorem.paragraph())
+}
+*/
