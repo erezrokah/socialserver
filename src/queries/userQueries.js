@@ -18,11 +18,48 @@ const userSpecificInfo = (uname) => {
 	})
 }
 
+/*
+SELECT comments.comment,
+likes.likedbyuname,
+posts.post,posts.likes,posts.id,
+users.fname,users.lname
+FROM posts
+LEFT OUTER JOIN comments ON posts.id = comments.postId
+INNER JOIN users ON users.uname = posts.uname
+LEFT OUTER JOIN likes ON posts.id = likes.postId
+WHERE posts.uname='brad' ORDER BY posts.id ASC
+
+var myArray = ['a', 1, 'a', 2, '1'];
+
+let unique = [...new Set(myArray)]; 
+*/
+
+const getPostsDetailAlpha = (following) => {
+	return new Promise((resolve,reject)=>{
+		let sql = `
+		SELECT comments.comment,comments.commenter,
+		likes.likedbyuname,
+		posts.post,posts.likes,posts.id,
+		users.fname,users.lname
+		FROM posts
+		LEFT OUTER JOIN comments ON posts.id = comments.postId
+		INNER JOIN users ON users.uname = posts.uname
+		LEFT OUTER JOIN likes ON posts.id = likes.postId
+		WHERE posts.uname IN (?) ORDER BY posts.id ASC`
+		db.query(sql,[following],(err,rows)=>{
+			resolve(rows)
+		})
+	})
+}
+
 const getPostsDetail = (following) => {
 	return new Promise((resolve,reject)=>{
 		let sql = `
-		SELECT posts.uname,posts.post,posts.likes,likes.likedbyuname,posts.id 
-		FROM posts LEFT OUTER JOIN likes ON posts.id=likes.postId 
+		SELECT users.fname,users.lname,posts.uname,posts.post,posts.likes,
+		likes.likedbyuname,posts.id 
+		FROM posts 
+		LEFT OUTER JOIN likes ON posts.id=likes.postId
+		INNER JOIN users ON posts.uname=users.uname 
 		WHERE posts.uname IN (?) ORDER BY posts.id ASC`
 		db.query(sql,[following],(err,rows)=>{
 			resolve(rows)
@@ -142,10 +179,61 @@ const searchUsers = (subString) => {
 	})	
 }
 
+// const searchUsers = (subString) => {
+// 	return new Promise((resolve,reject)=>{
+// 		let sql = `SELECT * FROM users`
+// 		db.query(sql,[],(err,rows)=>{
+// 			if(err) reject(err)
+// 			else resolve(rows)
+// 		}) 
+// 	})	
+// }
+
+const deletePost = (postId,uname) => {
+	return new Promise((resolve,reject)=>{
+		let sql = `DELETE FROM posts WHERE id=? AND uname=?`
+		db.query(sql,[postId,uname],(err)=>{
+			if(err) reject(err)
+			else resolve()
+		})
+	})
+}
+
+const addComment = (postId,commenter,comment) => {
+	return new Promise((resolve,reject)=>{
+		let sql = `INSERT INTO comments(postId,commenter,comment)VALUES(?,?,?)`
+		db.query(sql,[postId,commenter,comment],(err)=>{
+			if(err) reject(err)
+			else resolve()
+		})
+	})
+}
+
+const signup = (fname,lname,uname,pwd,profileStatus) => {
+	return new Promise((resolve,reject)=>{
+		let sql = `INSERT INTO users(fname,lname,uname,pwd,profileStatus)VALUES(?,?,?,?,?)`
+		db.query(sql,[fname,lname,uname,pwd,profileStatus],(err)=>{
+			if(err) reject(err)
+			else resolve()
+		})
+	})
+}
+
+const editPost = (post,postId,uname) => {
+	return new Promise((resolve,reject)=>{
+		let sql = `UPDATE posts SET post=? WHERE id=? and uname=?`
+		db.query(sql,[post,postId,uname],(err)=>{
+			if(err) reject(err)
+			else resolve()
+		})
+	})
+}
+
 module.exports = {
 	getPosts,
 	userSpecificInfo,
 	getPostsDetail,
+	getPostsDetailAlpha,
 	likePost,
 	updateNumberOfLikes,
 	unlikePost,
@@ -155,5 +243,9 @@ module.exports = {
 	follow,
 	unfollow,
 	checkIfFollowing,
-	searchUsers
+	searchUsers,
+	deletePost,
+	addComment,
+	signup,
+	editPost
 }

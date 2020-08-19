@@ -7,6 +7,7 @@ const path = require('path')
 const jwt = require('jsonwebtoken')
 const userQueries = require('./queries/userQueries')
 var faker = require('faker')
+let serverless = require('serverless-http')
 
 //Configuring App wide variables
 app.set('port',process.env.PORT || 7000)
@@ -34,7 +35,7 @@ app.use(cors({
 }))
 
 app.use((req,res,next)=>{
-	console.log(req.session)
+	// console.log(req.session)
 	next()
 })
 
@@ -74,12 +75,12 @@ if (app.get('env') === 'development') {
 }
 
 //GET API endpoints
-app.use('/',require('./APIs/GET/generalRequests'))
-app.use('/',require('./APIs/GET/userRequests'))
+app.use('/.netlify/functions/api',require('./APIs/GET/generalRequests'))
+app.use('/.netlify/functions/api',require('./APIs/GET/userRequests'))
 
 //POST API endpoints
-app.use('/',require('./APIs/POST/authRequests'))
-app.use('/',require('./APIs/POST/userRequests'))
+app.use('/.netlify/functions/api',require('./APIs/POST/authRequests'))
+app.use('/.netlify/functions/api',require('./APIs/POST/userRequests'))
 
 //Serve React app in production
 
@@ -92,9 +93,11 @@ app.use('/',require('./APIs/POST/userRequests'))
 }*/
 
 
-app.listen(app.get('port'), () => {
-	console.log('servers running on 7000')
-})
+// app.listen(app.get('port'), () => {
+// 	console.log('servers running on 7000')
+// })
+
+module.exports.handler = serverless(app)
 
 /*for(let i=0;i<3;i++){
 	userQueries.addPost('usman',faker.lorem.paragraph())

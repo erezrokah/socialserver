@@ -26,4 +26,10 @@ router.get('/logout',(req,res)=>{
 	res.send({auth:false})
 })
 
+router.get('/hmn',(req,res)=>{
+	res.send({
+		status:'Good status lmao'
+	})
+})
+
 module.exports = router

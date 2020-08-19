@@ -47,4 +47,27 @@ router.post('/signin',(req,res)=>{
 			})
 })
 
+router.post('/signup',(req,res)=>{
+	let {fname,lname,uname,pwd} = req.body
+	userQueries.userSpecificInfo(uname)
+	.then(function(rows){
+		if(rows.length>0){
+			res.send({
+				status:false,
+				msg:'User Already exists with the username:' + uname
+			})
+		}
+		else{
+			userQueries.signup(fname,lname,uname,pwd,0)
+			.then(()=>{
+				res.send({
+					status:true,
+					msg:'Account Successfully made'
+				})
+			})
+		}
+		// console.log(rows)
+	})
+})
+
 module.exports = router
